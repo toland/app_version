@@ -2,7 +2,7 @@ require 'yaml'
 
 # A little hack to make regexs matches more readable...
 # From http://pastie.caboo.se/25533
-class String :nodoc:
+class String #:nodoc:
   alias _match match
   def match(*args)
     m = _match(args.shift)
@@ -19,8 +19,12 @@ end
 class Version
   include Comparable
 
-  attr_accessor :major, :minor, :milestone, :build
+  attr_accessor :major, :minor, :patch, :milestone, :build
 
+  # Creates a new instance of the Version class using information in the passed
+  # Hash to construct the version number.
+  #
+  #   Version.new(:major => 1, :minor => 0) #=> "1.0"
   def initialize(args = nil)
     if args && args.is_a?(Hash)
       args.each_key {|key| args[key.to_sym] = args.delete(key) unless key.is_a?(Symbol)}
@@ -31,6 +35,10 @@ class Version
 
       @major = int_value(args[:major])
       @minor = int_value(args[:minor])
+
+      if args[:patch] && int_value(args[:patch]) >= 0
+        @patch = int_value(args[:patch])
+      end
       
       if args[:milestone] && int_value(args[:milestone]) >= 0
         @milestone = int_value(args[:milestone])
@@ -44,18 +52,21 @@ class Version
     end
   end
 
+  # Parses a version string to create an instance of the Version class.
   def self.parse(version)
-    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?\s?(?:\((\d+)\))?/, 
-											:major, :minor, :milestone, :build)
+    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?/, 
+											:major, :minor, :patch, :milestone, :build)
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
     Version.new :major => m.major,
 								:minor => m.minor,
+								:patch => m.patch,
 								:milestone => m.milestone,
 								:build => m.build
   end
 
+  # Loads the version information from a YAML file.
   def self.load(path)
     Version.new YAML::load(File.open(path))
   end
@@ -65,7 +76,7 @@ class Version
     #   return self.build <=> other.build
     # end
 
-    %w(build major minor milestone).each do |meth|
+    %w(build major minor patch milestone).each do |meth|
       rhs = self.send(meth) || -1 
       lhs = other.send(meth) || -1
 
@@ -78,20 +89,17 @@ class Version
   
   def to_s
     str = "#{major}.#{minor}" 
-    str << ".#{milestone}" unless milestone.nil?
+    str << ".#{patch}" unless patch.nil?
+    str << " M#{milestone}" unless milestone.nil?
     str << " (#{build})" unless build.nil?
-    
+
     str
   end
 
 private
 
   def get_build_from_subversion
-    if File.exists?("#{RAILS_ROOT}/.svn")
-      # NOTE: When using Capistrano RAILS_ROOT contains a symlink which
-      # screws with subversion. The command below used to contain #{RAILS_ROOT}
-      # as a specific target but it failed when deployed with Capistrano. This
-      # seems to work.
+    if File.exists?(".svn")
       YAML.parse(`svn info`)['Revision'].value
     end
   end
