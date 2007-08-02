@@ -101,7 +101,7 @@ private
   def get_build_from_subversion
     if File.exists?(".svn")
       #YAML.parse(`svn info`)['Revision'].value
-      match = /(?:\d+:)?(\d+)M?S?/.match(`svnversion`)
+      match = /(?:\d+:)?(\d+)M?S?/.match(`svnversion .`)
       match && match[1]
     end
   end
