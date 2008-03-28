@@ -1,20 +1,5 @@
 require 'yaml'
 
-# A little hack to make regexs matches more readable...
-# From http://pastie.caboo.se/25533
-class String #:nodoc:
-  alias _match match
-  def match(*args)
-    m = _match(args.shift)
-    if m && m.length > 1
-      meta = (class << m; self; end)
-      args.each_with_index do |name, index|
-        meta.send(:define_method, name) { self[index+1] }
-      end
-    end
-    m
-  end
-end
 
 class Version
   include Comparable
@@ -54,16 +39,15 @@ class Version
 
   # Parses a version string to create an instance of the Version class.
   def self.parse(version)
-    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?/, 
-											:major, :minor, :patch, :milestone, :build)
+    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?/)
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
-    Version.new :major => m.major,
-								:minor => m.minor,
-								:patch => m.patch,
-								:milestone => m.milestone,
-								:build => m.build
+    Version.new :major => m[1],
+								:minor => m[2],
+								:patch => m[3],
+								:milestone => m[4],
+								:build => m[5]
   end
 
   # Loads the version information from a YAML file.
