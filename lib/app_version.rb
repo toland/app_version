@@ -21,7 +21,7 @@ class Version
       @major = int_value(args[:major])
       @minor = int_value(args[:minor])
 
-      if args[:patch] && int_value(args[:patch]) >= 0
+      if !args[:patch].blank? && int_value(args[:patch]) >= 0
         @patch = int_value(args[:patch])
       end
       
