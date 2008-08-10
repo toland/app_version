@@ -29,11 +29,16 @@ class Version
         @milestone = int_value(args[:milestone])
       end
 
-      if args[:build] == 'svn'
-        @build = get_build_from_subversion
-      else
-        @build = args[:build] && int_value(args[:build])
-      end
+      @build = case args[:build] 
+               when 'svn'
+                 get_build_from_subversion
+               when 'git-revcount'
+                 get_revcount_from_git
+               when 'git-hash'
+                 get_hash_from_git
+               else
+                 args[:build] && int_value(args[:build])
+               end
     end
   end
 
@@ -70,7 +75,7 @@ class Version
 
     return 0
   end
-  
+
   def to_s
     str = "#{major}.#{minor}" 
     str << ".#{patch}" unless patch.nil?
@@ -87,6 +92,18 @@ private
       #YAML.parse(`svn info`)['Revision'].value
       match = /(?:\d+:)?(\d+)M?S?/.match(`svnversion .`)
       match && match[1]
+    end
+  end
+
+  def get_revcount_from_git
+    if File.exists?(".git")
+      `git rev-list HEAD|wc -l`.strip
+    end
+  end
+
+  def get_hash_from_git
+    if File.exists?(".git")
+      `git show --pretty=format:%H|head -n1|cut -c 1-6`.strip
     end
   end
 
