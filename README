@@ -39,3 +39,6 @@ of the version number.
 Finally, there is a rake task for displaying the version number from the command
 line. 'rake app:version' will output the version number of the current rails
 application.
+
+This plugin is released under the terms of the Ruby license. See 
+http://www.ruby-lang.org/en/LICENSE.txt.
