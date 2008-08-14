@@ -22,13 +22,20 @@ following format:
   minor:     0
   patch:     1
   milestone: 4
-  build:     svn
+  build:     git-revcount
 
 If the milestone or patch fields are less than 0 then they will not show up
-in the version string. The build field can be a build number or the string
-svn. If it is a number then that number will be used as the build number, if it
-is the string 'svn' then the plugin will attempt to query Subversion for the 
-build number.
+in the version string. The build field can be a build number or one of the
+following strings: svn, git-hash or git-revcount. If it is a number then that
+number will be used as the build number, if it is one of the special strings
+then the plugin will attempt to query the source control system for the build
+number.
+
+Using 'svn' for the build number will cause the plugin to query Subversion for
+the current revision number. Since Git doesn't have a numbered revision we have
+to fake it. 'git-revcount' will count the number of commits to the repository
+and use that as the build number whereas 'git-hash' will use the first 6 digits
+of the current HEAD's hash.
 
 The plugin creates a constant APP_VERSION that contains the version number of
 the application. Calling the +to_s+ method on APP_VERSION will result in a
