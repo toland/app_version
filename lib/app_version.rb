@@ -56,7 +56,7 @@ class Version
 
   # Parses a version string to create an instance of the Version class.
   def self.parse(version)
-    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?(?:\sof\s\w)?(?:\sby\s\w)?(?:\son\s\S)?/)
+    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?(?:\sof\s(\w+))?(?:\sby\s(\w+))?(?:\son\s(\S+))?/)
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
@@ -86,7 +86,7 @@ class Version
     #   return self.build <=> other.build
     # end
 
-    %w(build major minor patch milestone).each do |meth|
+    %w(build major minor patch milestone branch committer build_date).each do |meth|
       rhs = self.send(meth) || -1 
       lhs = other.send(meth) || -1
 

@@ -5,5 +5,5 @@ patch:      3
 milestone:  4
 build:      500
 branch:     master
-committer:  jschank
-build-date: 1967-02-27
+committer:  coder
+build_date: 2008-10-27
