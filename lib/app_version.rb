@@ -4,7 +4,7 @@ require 'yaml'
 class Version
   include Comparable
 
-  attr_accessor :major, :minor, :patch, :milestone, :build
+  attr_accessor :major, :minor, :patch, :milestone, :build, :branch, :committer, :build_date
 
   # Creates a new instance of the Version class using information in the passed
   # Hash to construct the version number.
@@ -29,6 +29,14 @@ class Version
         @milestone = int_value(args[:milestone])
       end
 
+      if args[:build] && args[:build] != '' && int_value(args[:build]) >= 0
+        @build = int_value(args[:build])
+      end
+
+      @branch = args[:branch]
+      @committer = args[:committer]
+      @build_date = args[:build_date]
+
       @build = case args[:build] 
                when 'svn'
                  get_build_from_subversion
@@ -48,11 +56,15 @@ class Version
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
-    Version.new :major => m[1],
-								:minor => m[2],
-								:patch => m[3],
-								:milestone => m[4],
-								:build => m[5]
+    Version.new :major         => m[1],
+								:minor         => m[2],
+								:patch         => m[3],
+								:milestone     => m[4],
+								:build         => m[5],
+								:branch        => m[6],
+								:committer     => m[7],
+								:build_date    => m[8]
+								
   end
 
   # Loads the version information from a YAML file.
@@ -81,6 +93,9 @@ class Version
     str << ".#{patch}" unless patch.nil?
     str << " M#{milestone}" unless milestone.nil?
     str << " (#{build})" unless build.nil?
+    str << " of #{branch}" unless branch.nil?
+    str << " by #{committer}" unless committer.nil?
+    str << " on #{build_date}" unless build_date.nil?
 
     str
   end
@@ -110,6 +125,7 @@ private
   def int_value(value)
     value.to_i.abs
   end
+  
 end
 
 if defined?(RAILS_ROOT) && File.exists?("#{RAILS_ROOT}/config/version.yml")
