@@ -1,0 +1,15 @@
+==============
+= Deployment =
+==============
+todo: verify that the plugin install does actually copy the version.yml.erb to the right place
+
+===================
+= Problems & Bugs =
+===================
+fixme: Figure out how to get the name of the user who made the last commit.
+fixme: Figure out how to pass the branch to the git revcount call in the erb file.
+
+ =========================
+ = Refactoring & Testing =
+ =========================
+todo: Perhaps "build_date" should be called deploy_date because it is really the date of the deployment
