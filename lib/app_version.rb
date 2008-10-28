@@ -33,9 +33,13 @@ class Version
         @build = int_value(args[:build])
       end
 
-      @branch = args[:branch]
-      @committer = args[:committer]
-      @build_date = args[:build_date]
+      @branch = args[:branch] unless args[:branch] == ''
+      @committer = args[:committer] unless args[:committer] == ''
+      
+      if args[:build_date] && args[:build_date] != ''
+        str = args[:build_date].to_s
+        @build_date = Date.parse(str)
+      end
 
       @build = case args[:build] 
                when 'svn'
@@ -52,19 +56,24 @@ class Version
 
   # Parses a version string to create an instance of the Version class.
   def self.parse(version)
-    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?/)
+    m = version.match(/(\d+)\.(\d+)(?:\.(\d+))?(?:\sM(\d+))?(?:\s\((\d+)\))?(?:\sof\s\w)?(?:\sby\s\w)?(?:\son\s\S)?/)
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
-    Version.new :major         => m[1],
+    version = Version.new :major => m[1],
 								:minor         => m[2],
 								:patch         => m[3],
 								:milestone     => m[4],
 								:build         => m[5],
 								:branch        => m[6],
-								:committer     => m[7],
-								:build_date    => m[8]
-								
+								:committer     => m[7]
+
+		if (m[8] && m[8] != '')
+		  date = Date.parse(m[8])
+		  version.build_date = date
+	  end
+    
+		return version						
   end
 
   # Loads the version information from a YAML file.

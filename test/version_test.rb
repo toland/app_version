@@ -22,6 +22,9 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_from_string
+    version = Version.parse '1.2.3 M4 (500) of master by jschank on 02/27/1967'
+    assert_equal @version, version
+    
     version = Version.parse '1.2.3 M4 (500)'
     @version.branch = nil
     @version.committer = nil
@@ -101,7 +104,7 @@ class VersionTest < Test::Unit::TestCase
       :build => '500',
       :branch => 'master', 
       :committer => 'jschank', 
-      :build_date => '02/27/1967'
+      :build_date => '1967-02-27'
     assert_equal @version, version
   end
 
@@ -187,38 +190,38 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_to_s
-    assert_equal '1.2.3 M4 (500) of master by jschank on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 M4 (500) of master by jschank on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_milestone
     @version.milestone = nil
-    assert_equal '1.2.3 (500) of master by jschank on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 (500) of master by jschank on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_build
     @version.build = nil
-    assert_equal '1.2.3 M4 of master by jschank on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 M4 of master by jschank on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_patch
     @version.patch = nil
-    assert_equal '1.2 M4 (500) of master by jschank on 02/27/1967', @version.to_s
+    assert_equal '1.2 M4 (500) of master by jschank on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_build_or_milestone
     @version.milestone = nil
     @version.build = nil
-    assert_equal '1.2.3 of master by jschank on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 of master by jschank on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_branch
     @version.branch = nil
-    assert_equal '1.2.3 M4 (500) by jschank on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 M4 (500) by jschank on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_committer
     @version.committer = nil
-    assert_equal '1.2.3 M4 (500) of master on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 M4 (500) of master on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_build_date
@@ -229,7 +232,7 @@ class VersionTest < Test::Unit::TestCase
   def test_to_s_with_no_branch_or_committer
     @version.branch = nil
     @version.committer = nil
-    assert_equal '1.2.3 M4 (500) on 02/27/1967', @version.to_s
+    assert_equal '1.2.3 M4 (500) on 1967-02-27', @version.to_s
   end
 
   def test_to_s_with_no_committer_or_build_date
