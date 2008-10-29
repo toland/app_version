@@ -1,7 +1,6 @@
 ==============
 = Deployment =
 ==============
-todo: Verify that the plugin install does actually copy the version.yml.erb to the right place
 
 ===================
 = Problems & Bugs =
