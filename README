@@ -48,19 +48,16 @@ of the current HEAD's hash.
 The plugin creates a constant APP_VERSION that contains the version number of
 the application. Calling the +to_s+ method on APP_VERSION will result in a
 properly formatted version number. APP_VERSION also has +major+, +minor+,
-+patch+, +milestone+ and +build+ methods to retrieve the individual components
-of the version number.
-
-Finally, there is a rake task for displaying the version number from the command
-line. 'rake app:version' will output the version number of the current rails
-application.
++patch+, +milestone+, +build+, +branch+, +committer+, and +build_date+
+methods to retrieve the individual components of the version number.
 
 == Capistrano Usage
 
 When the app_version plugin is installed, it copies a templated edition of the 
-version.yml file into /lib/templates/version.yml.erb the initial file shows a
+version.yml file into /lib/templates/version.yml.erb, the initial file shows a
 tag for retrieving the revision count with git. It also shows displaying the 
-branch as specified with "set :branch" in your capistrano deploy.rb
+branch as specified with "set :branch" in your capistrano deploy.rb, see the
+comments in the erb file for more nifty tricks.
 
 When you do a cap deploy, there is a capistrano recipe built-in to the app_version
 plugin, which will render the templated version.yml into the standard location as 
@@ -69,6 +66,22 @@ mentioned above. This happens automatically after the deploy is done.
 Both the standard and extended capistrano usage can co-exist in the same project
 the dynamic rendering of the version.yml only happens when using capistrano to
 deploy your app.
+
+== Rake tasks
+
+This plugin includes 4 new rake tasks:
+
+rake app:install 		- will copy the version.yml and version.yml.erb into more user 
+									 		accessible locations (/config, and /lib/templates)
+
+rake app:uninstall 	- will remove the files copied in the install task
+
+rake app:render			- will render the erb template into /config/version.yml
+											in case you want to have dynamic values updated via a rake task.
+											Note: certain examples expect the app to be in a git working directory.
+
+rake app:version		- will output the version number of the current rails
+											application.
 
 = License
 
