@@ -5,7 +5,6 @@
 ===================
 = Problems & Bugs =
 ===================
-fixme: Figure out how to get the name of the user who made the last commit. (could be git-blame)
 fixme: Figure out how to pass the branch to the git revcount call in the erb file.
 
 ====================
