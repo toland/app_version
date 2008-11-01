@@ -8,13 +8,13 @@ minor:        0
 # patch:      1
 # milestone:  4
 build:      <%= `git rev-list HEAD|wc -l`.strip %>
-branch:     <%= branch %>
-committer:	<%= `git show -s --pretty=format:"%an"` %>
+branch:     <%# branch %>
+committer:  <%= `git show -s --pretty=format:"%an"` %>
 build_date: <%= Date.today.to_s %>
 
-# nifty tricks (note these examples are commented out in erb syntax, to use them replace the # with =)
-# <%# `git rev-list HEAD|wc -l`.strip %> will insert the count of commits to the repository (git)
-# <%# `git show -s --pretty=format:"%an"` %> 	will insert the name of the author of the last commit (git)
-# 																						many more options are available - see git show.
-# <%# Date.today.to_s %> will insert today's date - formatted yyyy-mm-dd
-# <%# branch %> will insert the branch variable used in capistrano
+<%# nifty tricks (note these examples are commented out in erb syntax, to use them replace the # with =)				-%>
+<%#  `git rev-list HEAD|wc -l`.strip 			=> will insert the count of commits to the repository (git)						-%>
+<%#  `git show -s --pretty=format:"%an"`  => will insert the name of the author of the last commit (git)				-%>
+<%#  																						many more options are available - see git show.									-%>
+<%#  Date.today.to_s 											=> will insert today's date - formatted yyyy-mm-dd										-%>
+<%#  branch 															=> will insert the branch variable used in capistrano									-%>
