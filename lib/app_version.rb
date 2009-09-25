@@ -1,7 +1,7 @@
 require 'yaml'
 
 
-class Version
+class AppVersion
   include Comparable
 
   attr_accessor :major, :minor, :patch, :milestone, :build, :branch, :committer, :build_date
@@ -60,7 +60,7 @@ class Version
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
-    version = Version.new :major => m[1],
+    version = AppVersion.new :major => m[1],
 								:minor         => m[2],
 								:patch         => m[3],
 								:milestone     => m[4],
@@ -78,7 +78,7 @@ class Version
 
   # Loads the version information from a YAML file.
   def self.load(path)
-    Version.new YAML::load(File.open(path))
+    AppVersion.new YAML::load(File.open(path))
   end
 
   def <=>(other)
@@ -138,5 +138,5 @@ private
 end
 
 if defined?(RAILS_ROOT) && File.exists?("#{RAILS_ROOT}/config/version.yml")
-  APP_VERSION = Version.load "#{RAILS_ROOT}/config/version.yml"
+  APP_VERSION = AppVersion.load "#{RAILS_ROOT}/config/version.yml"
 end

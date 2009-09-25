@@ -2,10 +2,10 @@ require 'test/unit'
 require 'yaml'
 require 'app_version'
 
-class VersionTest < Test::Unit::TestCase
+class AppVersionTest < Test::Unit::TestCase
 
   def setup
-    @version = Version.new
+    @version = AppVersion.new
     @version.major = 1
     @version.minor = 2
     @version.patch = 3
@@ -17,35 +17,35 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_load_from_file
-    version = Version.load 'test/version.yml'
+    version = AppVersion.load 'test/version.yml'
     assert_equal @version, version
   end
 
   def test_create_from_string
-    version = Version.parse '1.2.3 M4 (500) of master by coder on 2008-10-27'
+    version = AppVersion.parse '1.2.3 M4 (500) of master by coder on 2008-10-27'
     assert_equal @version, version
     
-    version = Version.parse '1.2.3 M4 (500)'
+    version = AppVersion.parse '1.2.3 M4 (500)'
     @version.branch = nil
     @version.committer = nil
     @version.build_date = nil
     assert_equal @version, version
 
-    version = Version.parse '1.2.3 (500)'
+    version = AppVersion.parse '1.2.3 (500)'
     @version.milestone = nil
     @version.branch = nil
     @version.committer = nil
     @version.build_date = nil
     assert_equal @version, version
 
-    version = Version.parse '1.2 (500)'
+    version = AppVersion.parse '1.2 (500)'
     @version.patch = nil
     @version.branch = nil
     @version.committer = nil
     @version.build_date = nil
     assert_equal @version, version
 
-    version = Version.parse '1.2'
+    version = AppVersion.parse '1.2'
     @version.milestone = nil
     @version.build = nil
     @version.branch = nil
@@ -53,14 +53,14 @@ class VersionTest < Test::Unit::TestCase
     @version.build_date = nil
     assert_equal @version, version
 
-    version = Version.parse '1.2.1'
+    version = AppVersion.parse '1.2.1'
     @version.patch = 1
     @version.branch = nil
     @version.committer = nil
     @version.build_date = nil
     assert_equal @version, version
 
-    version = Version.parse '2007.200.10 M9 (6) of branch by coder on 2008-10-27'
+    version = AppVersion.parse '2007.200.10 M9 (6) of branch by coder on 2008-10-27'
     @version.major = 2007
     @version.minor = 200
     @version.patch = 10
@@ -69,11 +69,11 @@ class VersionTest < Test::Unit::TestCase
     @version.branch = 'branch'
     @version.committer = 'coder'
     @version.build_date = Date.civil(2008, 10, 31)
-    assert_raises(ArgumentError) { Version.parse 'This is not a valid version' }
+    assert_raises(ArgumentError) { AppVersion.parse 'This is not a valid version' }
   end
 
   def test_create_from_int_hash_with_symbol_keys
-    version = Version.new :major => 1, 
+    version = AppVersion.new :major => 1, 
       :minor => 2, 
       :patch => 3, 
       :milestone => 4, 
@@ -85,7 +85,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_from_int_hash_with_string_keys
-    version = Version.new 'major' => 1, 
+    version = AppVersion.new 'major' => 1, 
       'minor' => 2, 
       'patch' => 3, 
       'milestone' => 4, 
@@ -97,7 +97,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_from_string_hash_with_symbol_keys
-    version = Version.new :major => '1', 
+    version = AppVersion.new :major => '1', 
       :minor => '2', 
       :patch => '3', 
       :milestone => '4', 
@@ -109,7 +109,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_from_string_hash_with_string_keys
-    version = Version.new 'major' => '1', 
+    version = AppVersion.new 'major' => '1', 
       'minor' => '2', 
       'patch' => '3', 
       'milestone' => '4', 
@@ -122,7 +122,7 @@ class VersionTest < Test::Unit::TestCase
 
   def test_create_from_hash_with_invalid_date
     # note - Date.parse will make heroic efforts to understand the date text.
-    version = Version.new :major => '1', 
+    version = AppVersion.new :major => '1', 
       :minor => '2', 
       :patch => '3', 
       :milestone => '4', 
@@ -135,18 +135,18 @@ class VersionTest < Test::Unit::TestCase
 
   def test_should_raise_when_major_is_missing
     assert_raises(ArgumentError) {
-      Version.new :minor => 2, :milestone => 3, :build => 400
+      AppVersion.new :minor => 2, :milestone => 3, :build => 400
     }
   end
 
   def test_should_raise_when_minor_is_missing
     assert_raises(ArgumentError) {
-      Version.new :major => 1, :milestone => 3, :build => 400
+      AppVersion.new :major => 1, :milestone => 3, :build => 400
     }
   end
 
   def test_create_without_optional_parameters
-    version = Version.new :major => 1, :minor => 2
+    version = AppVersion.new :major => 1, :minor => 2
 
     @version.patch = nil
     @version.milestone = nil
@@ -158,7 +158,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_with_0
-    version = Version.new :major => 1,
+    version = AppVersion.new :major => 1,
 								          :minor => 2,
 								          :patch => 0,
 								          :milestone => 0,
@@ -169,7 +169,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_with_nil
-    version = Version.new :major => 1,
+    version = AppVersion.new :major => 1,
 								          :minor => 2,
 								          :patch => nil,
 								          :milestone => nil,
@@ -186,7 +186,7 @@ class VersionTest < Test::Unit::TestCase
   end
 
   def test_create_with_empty_string
-    version = Version.new :major => 1,
+    version = AppVersion.new :major => 1,
 								          :minor => 2,
 								          :patch => '',
 								          :milestone => '',
