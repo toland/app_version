@@ -13,7 +13,7 @@ class AppVersion
   def initialize(args = nil)
     if args && args.is_a?(Hash)
       args.each_key {|key| args[key.to_sym] = args.delete(key) unless key.is_a?(Symbol)}
-  
+
       [:major, :minor].each do |param|
         raise ArgumentError.new("The #{param.to_s} parameter is required") if args[param].nil?
       end
@@ -24,7 +24,7 @@ class AppVersion
       if args[:patch] && args[:patch] != '' && int_value(args[:patch]) >= 0
         @patch = int_value(args[:patch])
       end
-      
+
       if args[:milestone] && args[:milestone] != '' && int_value(args[:milestone]) >= 0
         @milestone = int_value(args[:milestone])
       end
@@ -35,13 +35,13 @@ class AppVersion
 
       @branch = args[:branch] unless args[:branch] == ''
       @committer = args[:committer] unless args[:committer] == ''
-      
+
       if args[:build_date] && args[:build_date] != ''
         str = args[:build_date].to_s
         @build_date = Date.parse(str)
       end
 
-      @build = case args[:build] 
+      @build = case args[:build]
                when 'svn'
                  get_build_from_subversion
                when 'git-revcount'
@@ -60,20 +60,20 @@ class AppVersion
 
     raise ArgumentError.new("The version '#{version}' is unparsable") if m.nil?
 
-    version = AppVersion.new :major => m[1],
-								:minor         => m[2],
-								:patch         => m[3],
-								:milestone     => m[4],
-								:build         => m[5],
-								:branch        => m[6],
-								:committer     => m[7]
+    version = AppVersion.new :major     => m[1],
+                             :minor     => m[2],
+                             :patch     => m[3],
+                             :milestone => m[4],
+                             :build     => m[5],
+                             :branch    => m[6],
+                             :committer => m[7]
 
-		if (m[8] && m[8] != '')
-		  date = Date.parse(m[8])
-		  version.build_date = date
-	  end
-    
-		return version						
+    if (m[8] && m[8] != '')
+      date = Date.parse(m[8])
+      version.build_date = date
+    end
+
+    return version
   end
 
   # Loads the version information from a YAML file.
@@ -87,7 +87,7 @@ class AppVersion
     # end
 
     %w(build major minor patch milestone branch committer build_date).each do |meth|
-      rhs = self.send(meth) || -1 
+      rhs = self.send(meth) || -1
       lhs = other.send(meth) || -1
 
       ret = lhs <=> rhs
@@ -98,7 +98,7 @@ class AppVersion
   end
 
   def to_s
-    str = "#{major}.#{minor}" 
+    str = "#{major}.#{minor}"
     str << ".#{patch}" unless patch.nil?
     str << " M#{milestone}" unless milestone.nil?
     str << " (#{build})" unless build.nil?
@@ -134,7 +134,7 @@ private
   def int_value(value)
     value.to_i.abs
   end
-  
+
 end
 
 if defined?(RAILS_ROOT) && File.exists?("#{RAILS_ROOT}/config/version.yml")

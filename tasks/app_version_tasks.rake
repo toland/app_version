@@ -1,6 +1,6 @@
 namespace :app do
   require 'erb'
-  
+
   desc 'Report the application version.'
   task :version do
     require File.join(File.dirname(__FILE__), "../lib/app_version.rb")

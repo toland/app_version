@@ -24,7 +24,7 @@ class AppVersionTest < Test::Unit::TestCase
   def test_create_from_string
     version = AppVersion.parse '1.2.3 M4 (500) of master by coder on 2008-10-27'
     assert_equal @version, version
-    
+
     version = AppVersion.parse '1.2.3 M4 (500)'
     @version.branch = nil
     @version.committer = nil
@@ -73,63 +73,63 @@ class AppVersionTest < Test::Unit::TestCase
   end
 
   def test_create_from_int_hash_with_symbol_keys
-    version = AppVersion.new :major => 1, 
-      :minor => 2, 
-      :patch => 3, 
-      :milestone => 4, 
-      :build => 500, 
-      :branch => 'master', 
-      :committer => 'coder', 
-      :build_date => Date.civil(2008, 10, 27)
+    version = AppVersion.new  :major => 1,
+                              :minor => 2,
+                              :patch => 3,
+                              :milestone => 4,
+                              :build => 500,
+                              :branch => 'master',
+                              :committer => 'coder',
+                              :build_date => Date.civil(2008, 10, 27)
     assert_equal @version, version
   end
 
   def test_create_from_int_hash_with_string_keys
-    version = AppVersion.new 'major' => 1, 
-      'minor' => 2, 
-      'patch' => 3, 
-      'milestone' => 4, 
-      'build' => 500,
-      'branch' => 'master',
-      'committer' => 'coder',
-      'build_date' => '2008-10-27'
+    version = AppVersion.new  'major' => 1,
+                              'minor' => 2,
+                              'patch' => 3,
+                              'milestone' => 4,
+                              'build' => 500,
+                              'branch' => 'master',
+                              'committer' => 'coder',
+                              'build_date' => '2008-10-27'
     assert_equal @version, version
   end
 
   def test_create_from_string_hash_with_symbol_keys
-    version = AppVersion.new :major => '1', 
-      :minor => '2', 
-      :patch => '3', 
-      :milestone => '4', 
-      :build => '500',
-      :branch => 'master', 
-      :committer => 'coder', 
-      :build_date => '2008-10-27'
+    version = AppVersion.new  :major => '1',
+                              :minor => '2',
+                              :patch => '3',
+                              :milestone => '4',
+                              :build => '500',
+                              :branch => 'master',
+                              :committer => 'coder',
+                              :build_date => '2008-10-27'
     assert_equal @version, version
   end
 
   def test_create_from_string_hash_with_string_keys
-    version = AppVersion.new 'major' => '1', 
-      'minor' => '2', 
-      'patch' => '3', 
-      'milestone' => '4', 
-      'build' => '500',
-      'branch' => 'master',
-      'committer' => 'coder',
-      'build_date' => '2008-10-27'
+    version = AppVersion.new  'major' => '1',
+                              'minor' => '2',
+                              'patch' => '3',
+                              'milestone' => '4',
+                              'build' => '500',
+                              'branch' => 'master',
+                              'committer' => 'coder',
+                              'build_date' => '2008-10-27'
     assert_equal @version, version
   end
 
   def test_create_from_hash_with_invalid_date
     # note - Date.parse will make heroic efforts to understand the date text.
-    version = AppVersion.new :major => '1', 
-      :minor => '2', 
-      :patch => '3', 
-      :milestone => '4', 
-      :build => '500',
-      :branch => 'master', 
-      :committer => 'coder', 
-      :build_date => '12wtf34'
+    version = AppVersion.new  :major => '1',
+                              :minor => '2',
+                              :patch => '3',
+                              :milestone => '4',
+                              :build => '500',
+                              :branch => 'master',
+                              :committer => 'coder',
+                              :build_date => '12wtf34'
     assert_not_equal @version, version
   end
 
@@ -154,52 +154,52 @@ class AppVersionTest < Test::Unit::TestCase
     @version.branch = nil
     @version.committer = nil
     @version.build_date = nil
-    assert_equal @version, version    
+    assert_equal @version, version
   end
 
   def test_create_with_0
-    version = AppVersion.new :major => 1,
-								          :minor => 2,
-								          :patch => 0,
-								          :milestone => 0,
-								          :build => 100
+    version = AppVersion.new  :major => 1,
+                              :minor => 2,
+                              :patch => 0,
+                              :milestone => 0,
+                              :build => 100
 
-		assert_equal 0, version.patch
-		assert_equal 0, version.milestone		
+    assert_equal 0, version.patch
+    assert_equal 0, version.milestone
   end
 
   def test_create_with_nil
-    version = AppVersion.new :major => 1,
-								          :minor => 2,
-								          :patch => nil,
-								          :milestone => nil,
-								          :build => 100,
-								          :branch => nil,
-								          :committer => nil,
-								          :build_date => nil
+    version = AppVersion.new  :major => 1,
+                              :minor => 2,
+                              :patch => nil,
+                              :milestone => nil,
+                              :build => 100,
+                              :branch => nil,
+                              :committer => nil,
+                              :build_date => nil
 
-		assert_equal nil, version.patch
-		assert_equal nil, version.milestone
-		assert_equal nil, version.branch
-		assert_equal nil, version.committer
-		assert_equal nil, version.build_date
+    assert_equal nil, version.patch
+    assert_equal nil, version.milestone
+    assert_equal nil, version.branch
+    assert_equal nil, version.committer
+    assert_equal nil, version.build_date
   end
 
   def test_create_with_empty_string
-    version = AppVersion.new :major => 1,
-								          :minor => 2,
-								          :patch => '',
-								          :milestone => '',
-								          :build => 100,
-								          :branch => '',
-								          :committer => '',
-								          :build_date => ''
+    version = AppVersion.new  :major => 1,
+                              :minor => 2,
+                              :patch => '',
+                              :milestone => '',
+                              :build => 100,
+                              :branch => '',
+                              :committer => '',
+                              :build_date => ''
 
-		assert_equal nil, version.patch
-		assert_equal nil, version.milestone		
-		assert_equal nil, version.branch
-		assert_equal nil, version.committer
-		assert_equal nil, version.build_date
+    assert_equal nil, version.patch
+    assert_equal nil, version.milestone
+    assert_equal nil, version.branch
+    assert_equal nil, version.committer
+    assert_equal nil, version.build_date
   end
 
   def test_to_s
@@ -260,5 +260,4 @@ class AppVersionTest < Test::Unit::TestCase
     @version.build_date = nil
     assert_equal '1.2.3 M4 (500)', @version.to_s
   end
-
 end
