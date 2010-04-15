@@ -1,16 +1,16 @@
 require 'test/unit'
-require 'yaml'
+require 'active_support'
 require 'app_version'
 
 class AppVersionTest < Test::Unit::TestCase
 
   def setup
     @version = AppVersion.new
-    @version.major = 1
-    @version.minor = 2
-    @version.patch = 3
-    @version.milestone = 4
-    @version.build = 500
+    @version.major = '1'
+    @version.minor = '2'
+    @version.patch = '3'
+    @version.milestone = '4'
+    @version.build = '500'
     @version.branch = 'master'
     @version.committer = 'coder'
     @version.build_date = Date.civil(2008, 10, 27)
@@ -164,8 +164,8 @@ class AppVersionTest < Test::Unit::TestCase
                               :milestone => 0,
                               :build => 100
 
-    assert_equal 0, version.patch
-    assert_equal 0, version.milestone
+    assert_equal '0', version.patch
+    assert_equal '0', version.milestone
   end
 
   def test_create_with_nil
@@ -259,5 +259,17 @@ class AppVersionTest < Test::Unit::TestCase
     @version.committer = nil
     @version.build_date = nil
     assert_equal '1.2.3 M4 (500)', @version.to_s
+  end
+
+  def test_version_with_leading_zeros
+    version = AppVersion.new :major => '2010', :minor => '04'
+    assert_equal '04', version.minor
+    assert_equal '2010.04', version.to_s
+  end
+
+  def test_version_with_alpha_characters
+    version = AppVersion.new :major => '2010', :minor => '4a'
+    assert_equal '4a', version.minor
+    assert_equal '2010.4a', version.to_s
   end
 end

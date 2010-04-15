@@ -6,6 +6,12 @@ class AppVersion
 
   attr_accessor :major, :minor, :patch, :milestone, :build, :branch, :committer, :build_date
 
+  [:major, :minor, :patch, :milestone, :build, :branch, :committer].each do |attr|
+    define_method "#{attr}=".to_sym do |value|
+      instance_variable_set("@#{attr}".to_sym, value.blank? ? nil : value.to_s)
+    end
+  end
+
   # Creates a new instance of the Version class using information in the passed
   # Hash to construct the version number.
   #
@@ -15,30 +21,19 @@ class AppVersion
       args.each_key {|key| args[key.to_sym] = args.delete(key) unless key.is_a?(Symbol)}
 
       [:major, :minor].each do |param|
-        raise ArgumentError.new("The #{param.to_s} parameter is required") if args[param].nil?
+        raise ArgumentError.new("The #{param.to_s} parameter is required") if args[param].blank?
       end
 
-      @major = int_value(args[:major])
-      @minor = int_value(args[:minor])
+      @major      = args[:major].to_s
+      @minor      = args[:minor].to_s
+      @patch      = args[:patch].to_s     unless args[:patch].blank?
+      @milestone  = args[:milestone].to_s unless args[:milestone].blank?
+      @build      = args[:build].to_s     unless args[:build].blank?
+      @branch     = args[:branch].to_s    unless args[:branch].blank?
+      @committer  = args[:committer].to_s unless args[:committer].blank?
 
-      if args[:patch] && args[:patch] != '' && int_value(args[:patch]) >= 0
-        @patch = int_value(args[:patch])
-      end
-
-      if args[:milestone] && args[:milestone] != '' && int_value(args[:milestone]) >= 0
-        @milestone = int_value(args[:milestone])
-      end
-
-      if args[:build] && args[:build] != '' && int_value(args[:build]) >= 0
-        @build = int_value(args[:build])
-      end
-
-      @branch = args[:branch] unless args[:branch] == ''
-      @committer = args[:committer] unless args[:committer] == ''
-
-      if args[:build_date] && args[:build_date] != ''
-        str = args[:build_date].to_s
-        @build_date = Date.parse(str)
+      unless args[:build_date].blank?
+        @build_date = Date.parse(args[:build_date].to_s)
       end
 
       @build = case args[:build]
@@ -48,8 +43,10 @@ class AppVersion
                  get_revcount_from_git
                when 'git-hash'
                  get_hash_from_git
+               when nil, ''
+                 nil
                else
-                 args[:build] && int_value(args[:build])
+                 args[:build].to_s
                end
     end
   end
@@ -99,13 +96,12 @@ class AppVersion
 
   def to_s
     str = "#{major}.#{minor}"
-    str << ".#{patch}" unless patch.nil?
-    str << " M#{milestone}" unless milestone.nil?
-    str << " (#{build})" unless build.nil?
-    str << " of #{branch}" unless branch.nil?
-    str << " by #{committer}" unless committer.nil?
-    str << " on #{build_date}" unless build_date.nil?
-
+    str << ".#{patch}" unless patch.blank?
+    str << " M#{milestone}" unless milestone.blank?
+    str << " (#{build})" unless build.blank?
+    str << " of #{branch}" unless branch.blank?
+    str << " by #{committer}" unless committer.blank?
+    str << " on #{build_date}" unless build_date.blank?
     str
   end
 
@@ -130,11 +126,6 @@ private
       `git show --pretty=format:%H|head -n1|cut -c 1-6`.strip
     end
   end
-
-  def int_value(value)
-    value.to_i.abs
-  end
-
 end
 
 if defined?(RAILS_ROOT) && File.exists?("#{RAILS_ROOT}/config/version.yml")
