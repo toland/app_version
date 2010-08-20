@@ -18,7 +18,7 @@ class AppVersion
   #   Version.new(:major => 1, :minor => 0) #=> "1.0"
   def initialize(args = nil)
     if args && args.is_a?(Hash)
-      args.each_key {|key| args[key.to_sym] = args.delete(key) unless key.is_a?(Symbol)}
+      args.keys.reject {|key| key.is_a?(Symbol) }.each {|key| args[key.to_sym] = args.delete(key) }
 
       [:major, :minor].each do |param|
         raise ArgumentError.new("The #{param.to_s} parameter is required") if args[param].blank?
