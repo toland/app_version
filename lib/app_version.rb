@@ -4,9 +4,9 @@ require 'yaml'
 class AppVersion
   include Comparable
 
-  attr_accessor :major, :minor, :patch, :milestone, :build, :branch, :committer, :build_date
+  attr_accessor :major, :minor, :patch, :milestone, :build, :branch, :committer, :build_date, :format
 
-  [:major, :minor, :patch, :milestone, :build, :branch, :committer].each do |attr|
+  [:major, :minor, :patch, :milestone, :build, :branch, :committer, :format].each do |attr|
     define_method "#{attr}=".to_sym do |value|
       instance_variable_set("@#{attr}".to_sym, value.blank? ? nil : value.to_s)
     end
@@ -31,6 +31,7 @@ class AppVersion
       @build      = args[:build].to_s     unless args[:build].blank?
       @branch     = args[:branch].to_s    unless args[:branch].blank?
       @committer  = args[:committer].to_s unless args[:committer].blank?
+      @format     = args[:format]         unless args[:format].blank?
 
       unless args[:build_date].blank?
         @build_date = Date.parse(args[:build_date].to_s)
@@ -95,13 +96,17 @@ class AppVersion
   end
 
   def to_s
-    str = "#{major}.#{minor}"
-    str << ".#{patch}" unless patch.blank?
-    str << " M#{milestone}" unless milestone.blank?
-    str << " (#{build})" unless build.blank?
-    str << " of #{branch}" unless branch.blank?
-    str << " by #{committer}" unless committer.blank?
-    str << " on #{build_date}" unless build_date.blank?
+    if @format
+      str = eval("\"" + @format + "\"")
+    else
+      str = "#{major}.#{minor}"
+      str << ".#{patch}" unless patch.blank?
+      str << " M#{milestone}" unless milestone.blank?
+      str << " (#{build})" unless build.blank?
+      str << " of #{branch}" unless branch.blank?
+      str << " by #{committer}" unless committer.blank?
+      str << " on #{build_date}" unless build_date.blank?
+    end
     str
   end
 
@@ -128,6 +133,6 @@ private
   end
 end
 
-if defined?(RAILS_ROOT) && File.exists?("#{RAILS_ROOT}/config/version.yml")
-  APP_VERSION = AppVersion.load "#{RAILS_ROOT}/config/version.yml"
+if defined?(Rails.root.to_s) && File.exists?("#{(Rails.root.to_s)}/config/version.yml")
+  APP_VERSION = AppVersion.load "#{(Rails.root.to_s)}/config/version.yml"
 end
