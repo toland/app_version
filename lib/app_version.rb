@@ -31,7 +31,7 @@ class AppVersion
       @build      = args[:build].to_s     unless args[:build].blank?
       @branch     = args[:branch].to_s    unless args[:branch].blank?
       @committer  = args[:committer].to_s unless args[:committer].blank?
-      @format     = args[:format]         unless args[:format].blank?
+      @format     = args[:format].to_s    unless args[:format].blank?
 
       unless args[:build_date].blank?
         @build_date = Date.parse(args[:build_date].to_s)
