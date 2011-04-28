@@ -6,6 +6,7 @@
 = Problems & Bugs =
 ===================
 fixme: Figure out how to pass the branch to the git revcount call in the erb file.
+todo: Do parsing when string is a specified format
 
 ====================
 = Cosmetic Changes =
