@@ -97,7 +97,7 @@ class AppVersion
 
   def to_s
     if @format
-      str = eval("\"" + @format + "\"")
+      str = eval(@format.to_s.inspect)
     else
       str = "#{major}.#{minor}"
       str << ".#{patch}" unless patch.blank?
