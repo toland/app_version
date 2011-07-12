@@ -18,6 +18,12 @@ The components of the version number are:
 Only the major and minor numbers are required. The rest can be omitted and the
 plugin will attempt to do the right thing.
 
+== Install
+
+To install this plugin from gitHub run the following command:
+
+./script/plugin install git://github.com/toland/app_version.git
+
 == Usage
 
 To use, simply place a file in RAILS_ROOT/config called version.yml with the
@@ -37,7 +43,9 @@ in the version string. The build field can be a build number or one of the
 following strings: svn, git-hash or git-revcount. If it is a number then that
 number will be used as the build number, if it is one of the special strings
 then the plugin will attempt to query the source control system for the build
-number.
+number. The build date field can be a date or the following string: git-revdate.
+If you use the special string it will query the source control system and output 
+in YYYY-MM-DD format the commit date of the last revision.
 
 Using 'svn' for the build number will cause the plugin to query Subversion for
 the current revision number. Since Git doesn't have a numbered revision we have
