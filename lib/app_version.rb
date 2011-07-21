@@ -34,7 +34,13 @@ class AppVersion
       @format     = args[:format].to_s    unless args[:format].blank?
 
       unless args[:build_date].blank?
-        @build_date = Date.parse(args[:build_date].to_s)
+        b_date = case args[:build_date]
+             when 'git-revdate'
+               get_revdate_from_git
+             else
+               args[:build_date].to_s
+             end
+        @build_date = Date.parse(b_date)
       end
 
       @build = case args[:build]
@@ -122,10 +128,16 @@ private
 
   def get_revcount_from_git
     if File.exists?(".git")
-      `git rev-list HEAD|wc -l`.strip
+      `git rev-list --count HEAD`.strip
     end
   end
-
+  
+  def get_revdate_from_git
+    if File.exists?(".git")
+      `git show --date=short --pretty=format:%cd|head -n1`.strip
+    end
+  end
+  
   def get_hash_from_git
     if File.exists?(".git")
       `git show --pretty=format:%H|head -n1|cut -c 1-6`.strip
