@@ -132,15 +132,15 @@ private
     end
   end
   
-  def get_revdate_from_git
+  def get_revdate_from_git  
     if File.exists?(".git")
-      `git show --date=short --pretty=format:%cd|head -n1`.strip
+      `git show --date=short --pretty=format:%cd`.split("\n")[0].strip
     end
   end
   
   def get_hash_from_git
     if File.exists?(".git")
-      `git show --pretty=format:%H|head -n1|cut -c 1-6`.strip
+      `git show --pretty=format:%H`.split("\n")[0].strip[0..5]
     end
   end
 end
